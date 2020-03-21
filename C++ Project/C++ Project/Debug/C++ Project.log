@@ -1,0 +1,6 @@
+﻿  C++ Project.cpp
+C:\Users\chinb\source\repos\C++ Project\C++ Project\C++ Project.cpp(158): warning C4715: 'make_Wstocksmap': not all control paths return a value
+C:\Users\chinb\source\repos\C++ Project\C++ Project\C++ Project.cpp(205): warning C4715: 'make_Dstocksmap': not all control paths return a value
+C:\Users\chinb\source\repos\C++ Project\C++ Project\C++ Project.cpp(108): warning C4715: 'make_Mstocksmap': not all control paths return a value
+C:\Users\chinb\source\repos\C++ Project\C++ Project\C++ Project.cpp(254): warning C4715: 'make_Hstocksmap': not all control paths return a value
+  C++ Project.vcxproj -> C:\Users\chinb\source\repos\C++ Project\Debug\C++ Project.exe
