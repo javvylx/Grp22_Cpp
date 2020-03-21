@@ -1,0 +1,12 @@
+﻿  main.cpp
+C:\Users\kevin\source\repos\Test\Test\main.cpp(21,7): warning C4101: 'tmpBuf': unreferenced local variable
+  Generating code
+  49 of 198 functions (24.7%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+LINK : warning LNK4286: symbol '___iob_func' defined in 'main.obj' is imported by 'twitcurl.lib(url.obj)'
+LINK : warning LNK4286: symbol '___iob_func' defined in 'main.obj' is imported by 'twitcurl.lib(cookie.obj)'
+LINK : warning LNK4286: symbol '___iob_func' defined in 'main.obj' is imported by 'twitcurl.lib(mprintf.obj)'
+LINK : warning LNK4286: symbol '___iob_func' defined in 'main.obj' is imported by 'twitcurl.lib(formdata.obj)'
+  Test.vcxproj -> C:\Users\kevin\source\repos\Test\Release\Test.exe
