@@ -14,6 +14,8 @@ using namespace std;
 #include "NewsObject.h"
 #include "StocksObject.h"
 
+#include <limits.h>
+
 void make_newsmap(map<int, NewsObject*>&newsHashMap) {
 	Json::CharReaderBuilder builder;
 	Json::Value root;
@@ -252,49 +254,90 @@ int make_Hstocksmap(map<int, StocksHourObject*>& HstocksHashMap, string user_sym
 		counter++;
 	}
 }
-//int predictStock(map<int, StocksDailyObject*>& DstocksHashMap) {
-//
-//	// create an ofstream for the file output (see the link on streams for
-//	// more info)
-//	ofstream outputFile;
-//	ofstream fs;
-//	fstream fout;
-//	// create a name for the file output
-//	fout.open("ml_data.csv", ios::out | ios::app);
-//	map<int, StocksDailyObject*>::iterator ids;
-//	for (ids = DstocksHashMap.begin(); ids != DstocksHashMap.end(); ids++) {
-//		fout << ids->second->getopen() << endl;
-//	}
-//
-//	outputFile.close();
-//
-//	double avgChange = 0.00;
-//	double avgPrice = 0.00;
-//	double movingAvgPrice = 0.00;
-//	double movingAvgPriceTotal = 0.00;
-//	double previous = Double.MIN_VALUE;
-//	int count = 1;
-//
-//	List<Double> movingAverage = new ArrayList<>();
-//	for (double each : value) {
-//		if (previous != Double.MIN_VALUE) {
-//			avgChange += (previous - each);
-//		}
-//		if (count % 100 == 0) {
-//			double currentMovingAvgPrice = movingAvgPrice / 100;
-//			movingAvgPriceTotal += currentMovingAvgPrice;
-//			movingAverage.add(currentMovingAvgPrice);
-//			movingAvgPrice = 0;
-//		}
-//		avgPrice += each;
-//		movingAvgPrice += each;
-//		previous = each;
-//		count++;
-//	}
-//}
+std::vector<double> predictStock(map<int, StocksDailyObject*>& DstocksHashMap) {
+
+	// create an ofstream for the file output (see the link on streams for
+	// more info)
+	ofstream outputFile;
+	ofstream fs;
+	fstream fout;
+	// create a name for the file output
+	fout.open("ml_data.csv", ios::out | ios::app);
+	map<int, StocksDailyObject*>::iterator ids;
+	for (ids = DstocksHashMap.begin(); ids != DstocksHashMap.end(); ids++) {
+		fout << ids->second->getopen() << endl;
+	}
+
+	outputFile.close();
+
+	double avgChange = 0.00;
+	double avgPrice = 0.00;
+	double movingAvgPrice = 0.00;
+	double movingAvgPriceTotal = 0.00;
+	int count = 1;
+	double previous = 0.0;
+	//for (ids = DstocksHashMap.begin(); ids != DstocksHashMap.end(); ids++) {
+	//	if (ids->second->getopen() <= previous) {
+	//		previous = ids->second->getopen();
+	//	}
+	//}
+	vector<double> movingAverage;
+	//List<Double> movingAverage = new ArrayList<>();
+	for (ids = DstocksHashMap.begin(); ids != DstocksHashMap.end(); ids++) {
+		double each = ids->second->getopen();
+		if (previous != 0) {
+			avgChange += (previous - each);
+		}
+		if (count % 100 == 0) {
+			double currentMovingAvgPrice = movingAvgPrice / 100;
+			movingAvgPriceTotal += currentMovingAvgPrice;
+			movingAverage.push_back(currentMovingAvgPrice);
+			movingAvgPrice = 0;
+		}
+		avgPrice += each;
+		movingAvgPrice += each;
+		previous = each;
+		count++;
+	}
+
+	avgPrice = avgPrice/movingAverage.size();
+	avgChange = avgChange / movingAverage.size();
+	double currentMovingAvgPrice = movingAvgPrice / (count % 100);
+	movingAvgPriceTotal += currentMovingAvgPrice;
+
+	movingAverage.push_back(currentMovingAvgPrice);
+	movingAvgPrice = movingAvgPriceTotal / movingAverage.size();
+
+
+	double closing1 = movingAverage.back() + avgChange;
+	double closing2 = closing1 + avgChange;
+	double closing3 = closing2 + avgChange;
+
+	vector<double> Prediction;
+	Prediction.push_back(closing1);
+	Prediction.push_back(closing2);
+	Prediction.push_back(closing3);
+
+	return Prediction;
+}
 
 int main()
 {
+	/*
+		To teammates: the following commented out session are for-loops that helps to print the values that you need
+		It has been sectioned into 6 distinct parts.
+		News - newsHashMap
+		Stocks - MstocksHashmap etc etc
+		Prediction - PredictionMap
+		Simply uncomment the for-loops to print out the values
+
+		=======  ==     ==    ========  ========  ======    ========
+		==       ==     ==    ==        ==        ==   ==   ==
+		==       =========    ========  ========  ==  ==    ========
+		==       ==     ==    ==        ==        ====            ==
+		=======  ==     ==    ========  ========  ==  ==    ========
+
+	*/
 	string user_input_symbol = "MSFT";
     cout << "Hello World!\n";
 	map<int, NewsObject*> newsHashMap;
@@ -343,8 +386,10 @@ int main()
 	//}
 
 	map<int, int> PredictionMap;
-	predictStock(DstocksHashMap);
-
+	vector<double> Prediction = predictStock(DstocksHashMap);
+	//cout << "Output of begin and end: ";
+	//for (auto i = Prediction.begin(); i != Prediction.end(); ++i)
+	//	cout << *i << " ";
 }
 
 
