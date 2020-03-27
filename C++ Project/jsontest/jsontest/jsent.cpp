@@ -5,7 +5,6 @@
 #include <json/json.h>
 #include <json/writer.h>
 #include <json/value.h>
-#include "tchar.h"
 #include <fstream>
 #include "results.h"
 
@@ -26,7 +25,7 @@ int noun(string n, int sent[2]) { // function
 	if (!inputfileneg.is_open()) // checks to make sure file is open
 		cout << "Error opening - Negative words file" << endl;
 
-	while (getline(inputfilepos, textfilepos)) {
+	while (getline(inputfilepos, textfilepos)) { // if foudn in positive file
 		if (textfilepos == n) {
 			sent[0]++;
 			posfound = true;
@@ -35,7 +34,7 @@ int noun(string n, int sent[2]) { // function
 		//    cout << textfilepos;
 	}
 	inputfilepos.close();
-	while (getline(inputfileneg, textfileneg)) {
+	while (getline(inputfileneg, textfileneg)) { // if found in negative file
 		if (textfileneg == n) {
 			sent[1]++;
 			negfound = true;
@@ -47,11 +46,11 @@ int noun(string n, int sent[2]) { // function
 
 	return 0;
 };
-int main(int argc, _TCHAR* argv[])
+int main()
 {
 	ifstream myfile("output.json");
 	string line;
-	Json::Reader reader;
+	Json::Reader reader;// setting up reader to parse
 	Json::Value root;
 	Json::Value clean;
 	results sentiment;
@@ -68,18 +67,18 @@ int main(int argc, _TCHAR* argv[])
 					//	cout << mynames[index]["user"]["name"] << endl;
 						//cout << mynames[index]["created_at"] << endl;
 					//	cout << mynames[index]["text"] << endl << endl;
-					string s = (mynames[index]["text"]).asString();
+					string s = (mynames[index]["text"]).asString(); // get tweet sentence content
 					string str;
 
 					//cout << s << endl;
 					Json::Value event;
 
-					event["tweet"]["date"] = mynames[index]["created_at"];
-					event["tweet"]["user"] = mynames[index]["user"]["name"];
-					event["tweet"]["content"] = mynames[index]["text"];
+					event["tweet"]["date"] = mynames[index]["created_at"]; // get timestamp of tweet
+					event["tweet"]["user"] = mynames[index]["user"]["name"]; // get username from tweet
+					event["tweet"]["content"] = mynames[index]["text"]; // get the tweet content
 					clean.append(event);
 					int sent[2] = { 0,0 };
-					for (auto x : s)
+					for (auto x : s) // sends each word in the sentence to check
 					{
 						if (x == ' ')
 						{
